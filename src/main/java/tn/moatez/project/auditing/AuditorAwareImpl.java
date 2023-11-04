@@ -1,4 +1,4 @@
-package tn.moatez.project.config;
+package tn.moatez.project.auditing;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;

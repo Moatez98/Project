@@ -1,4 +1,4 @@
-package tn.moatez.project.config;
+package tn.moatez.project.auditing;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
