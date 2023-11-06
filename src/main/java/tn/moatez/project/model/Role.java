@@ -23,6 +23,7 @@ public class Role extends AbstractBaseEntity{
     private ERole name;
 
     public Role(ERole name) {
+        this.name = name;
     }
     public static Role mapToEntity(RoleDTO dto){
         if (dto != null) {
