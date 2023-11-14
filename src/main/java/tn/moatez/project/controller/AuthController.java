@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import tn.moatez.project.dto.UserDTO;
+import tn.moatez.project.payload.request.ChangePwdRequest;
+import tn.moatez.project.payload.request.ChangePwdVerifTokenRequest;
 import tn.moatez.project.payload.request.LoginRequest;
 import tn.moatez.project.payload.response.UserInfoResponse;
 import tn.moatez.project.repository.RoleRepository;
@@ -102,8 +104,18 @@ return null;
 
 
     }
-    @GetMapping("/test")
-    public String test(){
-        return "hello";
+    @PostMapping("/requestchangepwd")
+    public ResponseEntity<Boolean> test(@RequestBody ChangePwdRequest changePwdRequest){
+        if(userService.requestChangePwd(changePwdRequest.getEmail())){
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(false);
+    }
+    @PostMapping("/forgetpwd")
+    public ResponseEntity<Boolean> changepwd(@RequestBody ChangePwdVerifTokenRequest changePwdVerifTokenRequest){
+        if(userService.changePwd(changePwdVerifTokenRequest)){
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 }

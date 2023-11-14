@@ -1,0 +1,25 @@
+.img{
+    background-image: url('./chat.jpg'  )  ; 
+    background-color: rgb(0, 0, 0);   
+    background-size:cover; 
+    background-position:top;
+    height: 350px;
+   
+   
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
+  span{
+    font-family: 'Raleway', sans-serif; 
+    font-size:37px;
+    line-height:39px; 
+   color: rgb(0, 119, 255);
+     letter-spacing: 7px;
+  }p {
+    margin: 0;
+    text-indent: 3ch;
+  }
