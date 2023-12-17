@@ -27,7 +27,7 @@ public class JwtProvider {
     @Value("${jwt.jwtExpiration}")
         private int jwtExpirationMs;
 
-        @Value("${bezkoder.app.jwtCookieName}")
+        @Value("${jwt.jwtCookieName}")
         private String jwtCookie;
 
         public String getJwtFromCookies(HttpServletRequest request) {

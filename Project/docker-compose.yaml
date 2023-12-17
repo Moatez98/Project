@@ -1,0 +1,42 @@
+version: '3.3'
+
+services:
+  db:
+    image: mariadb:10-focal
+    #command: '--default-authentication-plugin=mysql_native_password' 
+    restart: always
+    volumes:
+      - ./Stockage/dbFiles:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=project
+      - MYSQL_ROOT_PASSWORD=essat123
+    networks:
+      - backend
+
+  springboot:
+    image: moatez98/back:00
+    restart: always
+    volumes:
+      - ./Stockage/images:/images
+    environment:
+      - spring.datasource.url=jdbc:mysql://db:3306/project?serverTimezone=Africa/Tunis&createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - project.images=/images
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+      - frontend
+
+  angular:
+    image: moatez98/front:00
+    restart: always
+    ports:
+      - 4200:80
+    networks:
+      - frontend
+networks:
+  backend:
+  frontend:
+
+

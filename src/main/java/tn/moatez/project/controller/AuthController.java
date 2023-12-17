@@ -1,7 +1,6 @@
 package tn.moatez.project.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -22,12 +21,13 @@ import tn.moatez.project.repository.RoleRepository;
 import tn.moatez.project.repository.UserRepository;
 import tn.moatez.project.security.jwt.JwtProvider;
 import tn.moatez.project.security.jwt.service.UserPrinciple;
+import tn.moatez.project.services.AuthService;
 import tn.moatez.project.services.UserService;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin("*")
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -48,13 +48,22 @@ public class AuthController {
 
     UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtProvider jwtUtils, UserService userService) {
+    AuthService authService;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
+                          RoleRepository roleRepository, PasswordEncoder encoder,
+                          JwtProvider jwtUtils, UserService userService, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
+        this.authService = authService;
+    }
+    @GetMapping("/test")
+    public String test(){
+        return "test";
     }
 
     @PostMapping("/signin")
@@ -104,18 +113,36 @@ return null;
 
 
     }
+    @PostMapping("/signout")
+    public ResponseEntity<?> logoutUser() {
+        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Logout");
+    }
     @PostMapping("/requestchangepwd")
     public ResponseEntity<Boolean> test(@RequestBody ChangePwdRequest changePwdRequest){
-        if(userService.requestChangePwd(changePwdRequest.getEmail())){
+        if(authService.requestChangePwd(changePwdRequest.getEmail())){
             return ResponseEntity.status(HttpStatus.OK).body(true);
         }
         return ResponseEntity.status(HttpStatus.OK).body(false);
     }
     @PostMapping("/forgetpwd")
     public ResponseEntity<Boolean> changepwd(@RequestBody ChangePwdVerifTokenRequest changePwdVerifTokenRequest){
-        if(userService.changePwd(changePwdVerifTokenRequest)){
+        if(authService.changePwd(changePwdVerifTokenRequest)){
             return ResponseEntity.status(HttpStatus.OK).body(true);
         }
         return ResponseEntity.status(HttpStatus.OK).body(false);
     }
+    @PostMapping("/requestverifcation")
+    public ResponseEntity<?> requestverifcation(@RequestBody ChangePwdRequest changePwdRequest){
+
+        return ResponseEntity.status(HttpStatus.OK).body(authService.requestVerificationUser(changePwdRequest.getEmail()));
+    }
+    @GetMapping("/verificationemail/{token}/{email}")
+    public  ResponseEntity<?> verficationemail(@PathVariable("token")String token,
+                                               @PathVariable("email")String email){
+        return ResponseEntity.status(HttpStatus.OK).body(authService.verificationUser(token,email));
+
+    }
+
 }
